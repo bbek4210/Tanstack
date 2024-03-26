@@ -27,7 +27,7 @@ function Products() {
   });
 
   const { data: products } = useQuery({
-    queryKey: ["products", limit, skip, q,category],
+    queryKey: ["products", limit, skip, q, category],
     queryFn: async () => {
       let url = `https://dummyjson.com/products/search?limit=${limit}&skip=${skip}&q=${q}`;
 
@@ -35,10 +35,11 @@ function Products() {
         url = `https://dummyjson.com/products/category/${category}?limit=${limit}&skip=${skip}`;
       }
 
-      const data = await fetch(url).then((res) => res.json());
-      return data.products;
+      return await fetch(url).then((res) => res.json());
+      return data;
     },
     placeholderData: keepPreviousData,
+    staleTime: 20000,
   });
 
   const handleMove = (moveCount) => {
@@ -74,7 +75,7 @@ function Products() {
                   setSearchParams((prev) => {
                     prev.set("q", e.target.value);
                     prev.set("skip", 0);
-
+                    prev.delete("category");
                     return prev;
                   });
                 }, 1000)}
@@ -106,7 +107,7 @@ function Products() {
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {products?.map((product) => (
+            {products?.products?.map((product) => (
               <div key={product.id} className="group relative">
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-64">
                   <img
@@ -137,6 +138,7 @@ function Products() {
 
           <div className="flex gap-2 mt-12">
             <button
+              disabled={skip < limit}
               className="bg-purple-500 px-4 py-1 text-white rounded"
               onClick={() => {
                 handleMove(-limit);
@@ -145,6 +147,7 @@ function Products() {
               Prev
             </button>
             <button
+              disabled={skip + limit >= products?.total}
               className="bg-purple-500 px-4 py-1 text-white rounded"
               onClick={() => {
                 handleMove(limit);
