@@ -144,7 +144,7 @@ function Products() {
                 handleMove(-limit);
               }}
             >
-              Prev
+              Previous
             </button>
             <button
               disabled={skip + limit >= products?.total}
