@@ -153,7 +153,7 @@ function Products() {
                 handleMove(limit);
               }}
             >
-              Next
+              Next page
             </button>
           </div>
         </div>
