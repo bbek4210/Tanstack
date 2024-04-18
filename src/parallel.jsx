@@ -27,7 +27,7 @@ const Parallel = () => {
           })
         }
       >
-        Load more
+        Load more...
       </button>
 
       {userIds.map((id) => (
